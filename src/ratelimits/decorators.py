@@ -122,11 +122,11 @@ class FixedWindowRateLimiter(object):
 # -------------------------------
 # Factory / Decorator Function
 # -------------------------------
-def ratelimiter(type: str, *args, **kwargs):
+def ratelimits(type: str, *args, **kwargs):
     """
     Factory + decorator for rate limiters.
     Example:
-        @ratelimiter("fixed", calls=10, period=30)
+        @ratelimits("fixed", calls=10, period=30)
         def my_func(): ...
     """
     type = type.lower()

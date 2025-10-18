@@ -1,5 +1,5 @@
 Metadata-Version: 2.4
-Name: ratelimiter
+Name: ratelimits
 Version: 0.1.1
 Summary: A simple function decorator that enables rate limiting using fixed window or sliding window strategies.
 Author-email: Juan Carlos Largo <juanca.buy@gmail.com>
