@@ -6,18 +6,18 @@ This module provides a functon decorator that can be used to wrap a function
 such that it will raise an exception if the number of calls to that function
 exceeds a maximum within a specified time window.
 '''
-from decorators import SlidingWindowRateLimiter, FixedWindowRateLimiter, rate_limiter
-from utilities import batch_generator
+from .decorators import SlidingWindowRateLimiter, FixedWindowRateLimiter, ratelimiter
+from .utilities import batch_generator
 
 fixed_rate = FixedWindowRateLimiter
 sliding_rate = SlidingWindowRateLimiter
-rate_limiter = rate_limiter
+ratelimiter = ratelimiter
 
 __all__ = [
   'fixed_rate',
   'sliding_rate',
   'batch_generator',
-  'rate_limiter',
+  'ratelimiter',
 ]
 
 __version__ = '0.1.1'
