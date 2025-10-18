@@ -5,20 +5,30 @@ A small Python library that provides simple function decorators for rate limitin
 
 Example — Fixed window (bursty)
 ```
-from ratelimiter import ratelimiter
+from ratelimits import ratelimits
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime as dt
 
-@ratelimiter("fixed_window", calls=10, period=60)
+@ratelimits("fixed_window", calls=10, period=20)
 def my_task(x):
-    print("task", x)
+    print(f"[{dt.now()}] task", x)
+
+with ThreadPoolExecutor(max_workers=None) as executor:
+    executor.map(my_task, range(20))
 ```
 
 Example — Sliding window (steady, evenly spaced)
 ```
-from ratelimiter import ratelimiter
+from ratelimits import ratelimits
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime as dt
 
-@ratelimiter("sliding_window", calls=30, period=60, debug=True)
-def api_call(payload):
-    return payload
+@ratelimits("sliding_window", calls=10, period=20)
+def my_task(x):
+    print(f"[{dt.now()}] task", x)
+
+with ThreadPoolExecutor(max_workers=None) as executor:
+    executor.map(my_task, range(20))
 ```
 
 ### Parameters Summary
