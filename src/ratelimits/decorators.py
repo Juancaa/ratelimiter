@@ -12,7 +12,7 @@ class SlidingWindowRateLimiter(object):
   Allows up to `calls` requests within a sliding `period` seconds window.
   Example: calls=30, period=60 means at most 30 calls in any rolling 60s window.
   """
-  def __init__(self, calls=30, period=60, debug=False):
+  def __init__(self, calls=30, period=60, debug=False, log_message=None):
     self.calls = calls
     self.period = period
     self.wdw_call_count = deque()
@@ -21,6 +21,7 @@ class SlidingWindowRateLimiter(object):
     self.total_calls = 0
     self.min_interval = self.period/self.calls
     self.next_run = 0
+    self.log_message = log_message 
 
   def __call__(self, func):
     @wraps(func)
@@ -29,26 +30,25 @@ class SlidingWindowRateLimiter(object):
       with self.lock:
         now = time.monotonic()
 
-        # Adjust next run considering delayed threads
-        self.next_run = max(now, self.next_run) + self.min_interval
-        
-        # If current thread is delayed, skip sleep
-        if now > self.next_run:
-          sleep_for = 0
-        else:
+        if now < self.next_run:
+          # The thread is too early 
+          self.next_run = max(now, self.next_run) + self.min_interval
           sleep_for = self.next_run - now
+        else:
+          # The thread is running late
+          self.next_run = max(now, self.next_run) + self.min_interval
+          sleep_for = 0
 
-        # Debug variables to track window usage statistics
         if self.debug:
           self.total_calls += 1
-          
-          # Remove expired timestamps to measure window usage
-          while self.wdw_call_count and self.wdw_call_count[0] <= now - self.period:
-            self.wdw_call_count.popleft()
           self.wdw_call_count.append(now)
-
           usage_ratio = len(self.wdw_call_count) / self.calls
-          print(f"[{dt.now()}][RateLimiter] {len(self.wdw_call_count)}/{self.calls}/{self.total_calls} calls in window, usage_ratio={usage_ratio:.2f} sleeping for {sleep_for:.2f} | args={args} | kwargs={kwargs}") 
+          if self.log_message is None:
+            print(f"{dt.now()} | WCnt={len(self.wdw_call_count)} WSize={self.calls} T={self.total_calls} U={100*usage_ratio:.0f}% W={sleep_for:.2f}s") 
+          else:
+            print(f"{dt.now()} | WCnt={len(self.wdw_call_count)} WSize={self.calls} T={self.total_calls} U={100*usage_ratio:.0f}% W={sleep_for:.2f}s | {self.log_message(args=args, kwargs=kwargs)}") 
+        elif self.log_message is not None:
+          print(self.log_message(args=args, kwargs=kwargs)) 
 
       # Sleep outside the lock
       time.sleep(sleep_for)
@@ -62,7 +62,7 @@ class FixedWindowRateLimiter(object):
   Allows at most `calls` executions per `period` seconds (plus optional offsets).
   """
   
-  def __init__(self, calls=30, period=60, offset_start=0, offset_end=0, debug=False):
+  def __init__(self, calls=30, period=60, offset_start=0, offset_end=0, debug=False, log_message=None):
     self.calls  = calls
     self.period = period
     
@@ -79,6 +79,7 @@ class FixedWindowRateLimiter(object):
     # initialize last run w dummy var
     self.last_time_run = period
     self.debug = debug
+    self.log_message = log_message 
 
   def __call__(self, func):
     @wraps(func)
@@ -111,8 +112,12 @@ class FixedWindowRateLimiter(object):
         self.total_call_count += 1
         self.wdw_call_count += 1
 
-        if self.debug:
-          print(f"[{dt.now()}][RateLimiter] Calls in current window: {self.wdw_call_count}/{self.calls} | args={args} | kwargs={kwargs}")
+        if self.debug and self.log_message is None:
+          print(f"{dt.now()} | WCnt={self.wdw_call_count} WSize={self.calls} T={self.total_call_count}")
+        elif self.debug and self.log_message is not None:
+          print(f"{dt.now()} | WCnt={self.wdw_call_count} WSize={self.calls} T={self.total_call_count} | {self.log_message(args=args, kwargs=kwargs)}")
+        elif self.log_message is not None:
+          print(self.log_message(args=args, kwargs=kwargs))
 
       # Make the API request
       return func(*args, **kwargs)
