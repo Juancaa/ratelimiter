@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: ratelimits
-Version: 0.1.4
+Version: 0.1.5
 Summary: A simple function decorator that enables rate limiting using fixed window or sliding window strategies.
 Author-email: Juan Carlos Largo <juanca.buy@gmail.com>
 License: MIT License
@@ -25,14 +25,14 @@ License: MIT License
         OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
         SOFTWARE.
         
-Project-URL: Homepage, https://github.com/Juancaa/ratelimiter
-Project-URL: Issues, https://github.com/Juancaa/ratelimiter/issues
+Project-URL: Homepage, https://github.com/Juancaa/ratelimits
+Project-URL: Issues, https://github.com/Juancaa/ratelimits/issues
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Dynamic: license-file
 
-# ratelimiter
+# ratelimits
 
 A small Python library that provides simple function decorators for rate limiting using either a fixed-window (bursty) or a sliding-window (steady) strategy.
 

@@ -9,10 +9,12 @@ exceeds a maximum within a specified time window.
 from .decorators import SlidingWindowRateLimiter, FixedWindowRateLimiter, ratelimits
 from .utilities import batch_generator
 
+__version__ = '0.1.5'
+
 fixed_rate = FixedWindowRateLimiter
 sliding_rate = SlidingWindowRateLimiter
 ratelimits = ratelimits
-ratelimits.__version__ = '0.1.4'
+ratelimits.__version__ = __version__
 
 __all__ = [
   'fixed_rate',
@@ -20,5 +22,3 @@ __all__ = [
   'batch_generator',
   'ratelimits',
 ]
-
-__version__ = '0.1.4'

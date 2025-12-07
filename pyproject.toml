@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ratelimits"
-version = "0.1.4"
+version = "0.1.5"
 description = "A simple function decorator that enables rate limiting using fixed window or sliding window strategies."
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -13,8 +13,8 @@ requires-python = ">=3.8"
 dependencies = []
 
 [project.urls]
-Homepage = "https://github.com/Juancaa/ratelimiter"
-Issues = "https://github.com/Juancaa/ratelimiter/issues"
+Homepage = "https://github.com/Juancaa/ratelimits"
+Issues = "https://github.com/Juancaa/ratelimits/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
