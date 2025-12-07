@@ -12,6 +12,7 @@ from .utilities import batch_generator
 fixed_rate = FixedWindowRateLimiter
 sliding_rate = SlidingWindowRateLimiter
 ratelimits = ratelimits
+ratelimits.__version__ = '0.1.4'
 
 __all__ = [
   'fixed_rate',
@@ -20,4 +21,4 @@ __all__ = [
   'ratelimits',
 ]
 
-__version__ = '0.1.1'
+__version__ = '0.1.4'

@@ -41,7 +41,14 @@ class SlidingWindowRateLimiter(object):
 
         if self.debug:
           self.total_calls += 1
-          self.wdw_call_count.append(now)
+
+          # Append current timestamp
+          self.wdw_call_count.append(now + sleep_for)
+
+          # Remove expired timestamps to measure window usage
+          while self.wdw_call_count and self.wdw_call_count[0] <= (now + sleep_for - self.period):
+            self.wdw_call_count.popleft()
+
           usage_ratio = len(self.wdw_call_count) / self.calls
           if self.log_message is None:
             print(f"{dt.now()} | WCnt={len(self.wdw_call_count)} WSize={self.calls} T={self.total_calls} U={100*usage_ratio:.0f}% W={sleep_for:.2f}s") 
@@ -135,9 +142,9 @@ def ratelimits(type: str, *args, **kwargs):
         def my_func(): ...
     """
     type = type.lower()
-    if type == "fixed_window" or type == "bursty":
+    if type == "fixed_window" or type == "bursty" or type == "fixed":
         limiter = FixedWindowRateLimiter(*args, **kwargs)
-    elif type == "sliding_window" or type == "steady":
+    elif type == "sliding_window" or type == "steady" or type == "sliding":
         limiter = SlidingWindowRateLimiter(*args, **kwargs)
     else:
         raise ValueError(f"Unknown rate limiter type: {type}")
