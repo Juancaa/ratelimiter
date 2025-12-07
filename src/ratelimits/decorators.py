@@ -30,14 +30,14 @@ class SlidingWindowRateLimiter(object):
       with self.lock:
         now = time.monotonic()
 
-        if now < self.next_run:
-          # The thread is too early 
-          self.next_run = max(now, self.next_run) + self.min_interval
-          sleep_for = self.next_run - now
-        else:
+        if now >= self.next_run:  
           # The thread is running late
-          self.next_run = max(now, self.next_run) + self.min_interval
           sleep_for = 0
+          self.next_run = now + self.min_interval
+        else:
+          # The thread is too early 
+          sleep_for = self.next_run - now
+          self.next_run = self.next_run + self.min_interval
 
         if self.debug:
           self.total_calls += 1
