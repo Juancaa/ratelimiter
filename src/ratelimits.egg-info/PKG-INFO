@@ -45,7 +45,7 @@ from datetime import datetime as dt
 
 @ratelimits("fixed_window", calls=10, period=20)
 def my_task(x):
-    print(f"[{dt.now()}] task", x)
+    print(f"{dt.now()} | task", x)
 
 with ThreadPoolExecutor(max_workers=None) as executor:
     executor.map(my_task, range(20))
@@ -65,7 +65,7 @@ from datetime import datetime as dt
   log_message = lambda args, kwargs: f"Running with args {args} and kwargs {kwargs}"
 )
 def my_task(x):
-    print(f"[{dt.now()}] task", x)
+    pass
 
 with ThreadPoolExecutor(max_workers=None) as executor:
     executor.map(my_task, range(20))

@@ -1,4 +1,4 @@
-# ratelimiter
+# ratelimits
 
 A small Python library that provides simple function decorators for rate limiting using either a fixed-window (bursty) or a sliding-window (steady) strategy.
 
